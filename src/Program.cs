@@ -50,8 +50,12 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Add DB Contexts
 // Move the connection string to user secrets for release
-builder.Services.AddDbContext<ApplicationDbContext>(opt =>
-    opt.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=devpass"));
+//builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+//    opt.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=devpass"));
+
+// Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register our TokenService dependency
 builder.Services.AddScoped<TokenService, TokenService>();
@@ -107,6 +111,7 @@ builder.Services.AddAuthentication(options =>
             ),
         };
     });
+
 
 // Build the app
 var app = builder.Build();
